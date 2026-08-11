@@ -1,6 +1,6 @@
 # PDFQuery — RAG Assistant
 
-A FastAPI backend for uploading PDF documents and querying them in natural language. Uses Retrieval-Augmented Generation (RAG): documents are chunked, embedded, and stored in ChromaDB; queries retrieve the most relevant chunks and pass them as context to Llama 3 running via Ollama.
+A FastAPI backend for uploading PDF documents and querying them in natural language. Uses Retrieval-Augmented Generation (RAG): documents are chunked, embedded, and stored in ChromaDB; queries retrieve the most relevant chunks and pass them as context to Qwen2.5 0.5B running via Ollama.
 
 ---
 
@@ -9,7 +9,7 @@ A FastAPI backend for uploading PDF documents and querying them in natural langu
 | Layer | Tool |
 |---|---|
 | API | FastAPI |
-| LLM | Llama 3 via Ollama |
+| LLM | Qwen2.5 0.5B via Ollama |
 | Vector Database | ChromaDB |
 | Embeddings | sentence-transformers (`all-MiniLM-L6-v2`) |
 | PDF Parsing | pypdf |
@@ -21,7 +21,7 @@ A FastAPI backend for uploading PDF documents and querying them in natural langu
 
 ```
 Upload:  PDF → Parse → Chunk → Embed → ChromaDB
-Query:   Question → Embed → ChromaDB similarity search → Context → Llama 3 → Answer
+Query:   Question → Embed → ChromaDB similarity search → Context → Qwen2.5 0.5B → Answer
 ```
 
 ---
@@ -57,11 +57,13 @@ requirements.txt
 docker compose up -d
 ```
 
-### 2. Pull the Llama 3 model (first time only)
+### 2. Pull the Qwen2.5 0.5B model (first time only)
 
 ```bash
-docker exec -it <container_id> ollama pull llama3
+docker exec -it <container_id> ollama pull qwen2.5:0.5b
 ```
+
+> A small model is used here since it runs reliably on machines with limited RAM (~8GB). Swap for a larger model like `llama3` in [app/services/llm.py](app/services/llm.py) if your machine has more headroom (llama3:8B needs ~5-6GB free RAM/VRAM just to load).
 
 Get the container ID from `docker ps`.
 

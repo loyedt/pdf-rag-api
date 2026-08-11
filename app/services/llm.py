@@ -7,7 +7,7 @@ def generate_answer(prompt):
     res = requests.post(
         f"{OLLAMA_URL}/api/generate",
         json={
-            "model": "llama3",
+            "model": "qwen2.5:0.5b",
             "prompt": prompt,
             "stream": False
         }
